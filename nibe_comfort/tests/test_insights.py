@@ -84,6 +84,19 @@ class OverviewTests(unittest.TestCase):
         self.assertIsNone(alarm["active"])
         self.assertIn("samma enhet", alarm["error"])
 
+    def test_alarm_is_the_binary_sensor_even_when_another_pump_sensor_ends_in_alarm(self):
+        fan = entity("sensor.pump_fan_speed_during_fire_alarm", 70, unit_of_measurement="%")
+        states = [*self.states, fan]
+        registry = [*self.registry, {"entity_id": fan["entity_id"], "device_id": "pump", "platform": "myuplink"}]
+        alarm = next(item for item in overview(states, registry, self.config, self.now)["pump"] if item["key"] == "alarm")
+        self.assertEqual(alarm["entity_id"], "binary_sensor.pump_alarm")
+        self.assertFalse(alarm["active"])
+        second = entity("binary_sensor.pump_second_alarm", "off")
+        registry.append({"entity_id": second["entity_id"], "device_id": "pump", "platform": "myuplink"})
+        alarm = next(item for item in overview([*states, second], registry, self.config, self.now)["pump"]
+                     if item["key"] == "alarm")
+        self.assertIsNone(alarm["value"], "Two binary alarm sensors are still ambiguous")
+
     def test_other_device_never_used_for_selected_pump(self):
         self.registry[1]["device_id"] = "another-pump"
         data = overview(self.states, self.registry, self.config, self.now)

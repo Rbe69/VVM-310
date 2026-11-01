@@ -111,6 +111,9 @@ def overview(states, registry, config, now):
     for suffix, (key, label) in LABELS.items():
         matches = [by_id[e] for e in pump_ids if e in by_id and e.endswith(suffix)
                    and e.startswith(("sensor.", "binary_sensor."))]
+        if key == "alarm" and len(matches) > 1:
+            # NIBE also has a sensor ending in _fire_alarm (fan speed during fire alarm): the alarm is the binary sensor.
+            matches = [m for m in matches if m["entity_id"].startswith("binary_sensor.")]
         if len(matches) != 1:
             pump.append({"key": key, "label": label, "value": None, "error": "Ingen entydig givare hittades."})
             continue

@@ -1,5 +1,11 @@
 # Ändringslogg
 
+## 0.2.39
+
+- **Pumplarm** hittas nu även när pumpen har en annan givare som slutar på
+  `_alarm` (NIBE har `Fan speed during fire alarm`). Larmet är den binära
+  givaren; finns flera binära larmgivare visas det som förut som oentydigt.
+
 ## 0.2.38
 
 - **Temperatur i alla valda rum**: temperaturen visas nu stor och fet (28 px)
