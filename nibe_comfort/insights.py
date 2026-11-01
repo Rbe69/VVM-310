@@ -13,7 +13,7 @@ from urllib.parse import quote, urlencode
 
 from controller import ControlError, control_rooms, device_peers, fresh_entity, next_step, number, price_contribution, temperature
 from learning import LearningStore, hourly_means, learn, lead_hours, predict, preheat_windows, shift_at
-from energy import POWER_UNITS, consumption_report, discover_meter, meter_error, produced_energy
+from energy import POWER_UNITS, consumption_report, discover_meter, hold_unchanged_tail, meter_error, produced_energy
 from auxiliary import heater_entities, heater_report
 
 
@@ -863,7 +863,14 @@ class Insights:
             })
             stamp = datetime.fromtimestamp(start - 900, timezone.utc).isoformat()
             groups = history_groups(self.history_request("/history/period/" + quote(stamp, safe="") + "?" + query))
-            report = heater_report(groups.get(power_id, []),
+            power_rows = groups.get(power_id, [])
+            try:
+                fresh_entity({s["entity_id"]: s for s in states}, power_id, config["max_age_minutes"], now,
+                             device_peers(registry).get(power_id, ()))
+                power_rows = hold_unchanged_tail(power_rows, power, end)
+            except ControlError:
+                pass
+            report = heater_report(power_rows,
                                    [] if price_problem else groups.get(price_id, []),
                                    power_id, price_id,
                                    {key: groups.get(s["entity_id"], []) for key, s in contexts.items()},

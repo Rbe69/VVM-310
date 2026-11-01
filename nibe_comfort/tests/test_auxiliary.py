@@ -7,6 +7,7 @@ from urllib.parse import parse_qs, urlsplit
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from auxiliary import context_at, context_history, heater_entities, heater_report
 from controller import ControlError
+from energy import hold_unchanged_tail
 from insights import Insights, pump_device_entities
 from test_controller import config
 from test_energy import START, END, PRICE, price_rows, row
@@ -82,6 +83,25 @@ class HeaterReportTests(unittest.TestCase):
         self.assertEqual(data["runtime_seconds"], 300)
         self.assertEqual(report(heater_rows((0, 3)))["runs"], [])
         self.assertEqual(report([])["totals"]["coverage_seconds"], 0)
+
+    def test_flat_sensor_is_held_to_window_end_only_when_it_still_reports_the_same_value(self):
+        flat = [row(POWER, 0, START - 900, device_class="power", state_class="measurement",
+                    unit_of_measurement="kW")]
+        current = row(POWER, 0, END + 60, device_class="power", state_class="measurement",
+                      unit_of_measurement="kW")
+        self.assertEqual(report(flat)["totals"]["coverage_seconds"], 0, "A single row is not held by itself")
+        data = report(hold_unchanged_tail(flat, current, END))
+        self.assertEqual(data["totals"]["coverage_seconds"], 86400)
+        self.assertEqual(data["totals"]["kwh"], 0)
+        self.assertEqual(data["runs"], [])
+        self.assertEqual(data["runtime_seconds"], 0)
+        self.assertEqual(data["skipped_intervals"], 0)
+        changed = {**current, "state": "3"}
+        self.assertIs(hold_unchanged_tail(flat, changed, END), flat)
+        self.assertIs(hold_unchanged_tail(flat, None, END), flat)
+        self.assertEqual(hold_unchanged_tail([], current, END), [])
+        late = [row(POWER, 0, END + 10, unit_of_measurement="kW")]
+        self.assertIs(hold_unchanged_tail(late, current, END), late)
 
     def test_cost_uses_historical_price_segments_and_marks_partial_pricing(self):
         prices = [row(PRICE, 1, START, unit_of_measurement="SEK/kWh"),
@@ -172,6 +192,25 @@ class HeaterIntegrationTests(unittest.TestCase):
         self.assertFalse(data["current"]["active"])
         self.assertEqual(data["current"]["kw"], 0)
         self.assertIsNone(data["current"]["error"])
+
+    def test_flat_zero_sensor_shows_a_full_idle_day_when_current_and_unchanged(self):
+        flat = row(POWER, 0, START - 900, device_class="power", state_class="measurement",
+                   unit_of_measurement="kW")
+        self.ha.request.return_value = [[flat], price_rows(), [row(MODE, "Heating", START)]]
+        self.ha.states.return_value = [row(POWER, 0, END + 60, device_class="power", state_class="measurement",
+                                           unit_of_measurement="kW"), row(MODE, "Heating", END + 60)]
+        with patch("insights.time.time", return_value=END + 60):
+            data = self.insights.auxiliary(self.cfg)
+        self.assertEqual(data["totals"]["coverage_seconds"], 86400)
+        self.assertEqual(data["totals"]["kwh"], 0)
+        self.assertEqual(data["runs"], [])
+        old = END - 4 * 3600
+        self.ha.states.return_value[0]["last_updated"] = row(POWER, 0, old)["last_updated"]
+        self.ha.states.return_value[1]["last_updated"] = row(MODE, "Heating", old)["last_updated"]
+        self.insights = Insights(self.ha)
+        with patch("insights.time.time", return_value=END + 60):
+            stale = self.insights.auxiliary(self.cfg)
+        self.assertEqual(stale["totals"]["coverage_seconds"], 0, "A stale sensor is not held")
 
     def test_provider_and_pump_switch_do_not_reuse_reports_or_wrong_prices(self):
         with patch("insights.time.time", return_value=END + 60):

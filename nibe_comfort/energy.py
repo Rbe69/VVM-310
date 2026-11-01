@@ -3,7 +3,7 @@
 import math
 import re
 from bisect import bisect_right
-from datetime import datetime
+from datetime import datetime, timezone
 
 from controller import ControlError, number
 
@@ -80,6 +80,29 @@ def timestamp(row):
         return stamp.timestamp()
     except (AttributeError, TypeError, ValueError, OverflowError) as exc:
         raise ControlError("Energihistoriken innehåller en ogiltig tidsstämpel.") from exc
+
+
+def hold_unchanged_tail(rows, state, until, step=MAX_POWER_GAP_SECONDS // 2):
+    """Carry a power reading that has not changed up to `until`.
+
+    Home Assistant writes no history row while a sensor keeps the same value, so a sensor
+    that stays at 0 kW looks like one long gap. Only call this when the entity is fresh and
+    still reports the last recorded value; the extra rows stay inside the power gap limit.
+    """
+    if not rows or not state or rows[-1].get("state") != state.get("state"):
+        return rows
+    last = timestamp(rows[-1])
+    if until <= last:
+        return rows
+    held = list(rows)
+    stamp = last + step
+    while stamp < until:
+        held.append({**rows[-1], "last_updated": datetime.fromtimestamp(stamp, timezone.utc).isoformat(),
+                     "last_changed": datetime.fromtimestamp(stamp, timezone.utc).isoformat()})
+        stamp += step
+    held.append({**rows[-1], "last_updated": datetime.fromtimestamp(until, timezone.utc).isoformat(),
+                 "last_changed": datetime.fromtimestamp(until, timezone.utc).isoformat()})
+    return held
 
 
 def price_unit(unit):
