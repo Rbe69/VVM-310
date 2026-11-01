@@ -82,26 +82,44 @@ def timestamp(row):
         raise ControlError("Energihistoriken innehåller en ogiltig tidsstämpel.") from exc
 
 
-def hold_unchanged_tail(rows, state, until, step=MAX_POWER_GAP_SECONDS // 2):
-    """Carry a power reading that has not changed up to `until`.
+def hold_unchanged_values(rows, state, until, step=MAX_POWER_GAP_SECONDS // 2):
+    """Carry a valid power reading forward until the next recorded row, but not past `until`.
 
     Home Assistant writes no history row while a sensor keeps the same value, so a sensor
-    that stays at 0 kW looks like one long gap. Only call this when the entity is fresh and
-    still reports the last recorded value; the extra rows stay inside the power gap limit.
+    that stays at 0 kW looks like one long gap. The reading is held up to the next row, which
+    is where the value changed or the sensor became unavailable. After the last row it is held
+    only when `state` (the entity as it is now) still reports the same value; pass None
+    otherwise. The extra rows stay inside the power gap limit, and unavailable stays a gap.
     """
-    if not rows or not state or rows[-1].get("state") != state.get("state"):
-        return rows
-    last = timestamp(rows[-1])
-    if until <= last:
-        return rows
-    held = list(rows)
-    stamp = last + step
-    while stamp < until:
-        held.append({**rows[-1], "last_updated": datetime.fromtimestamp(stamp, timezone.utc).isoformat(),
-                     "last_changed": datetime.fromtimestamp(stamp, timezone.utc).isoformat()})
-        stamp += step
-    held.append({**rows[-1], "last_updated": datetime.fromtimestamp(until, timezone.utc).isoformat(),
-                 "last_changed": datetime.fromtimestamp(until, timezone.utc).isoformat()})
+    held = []
+    for index, current in enumerate(rows):
+        held.append(current)
+        try:
+            if not math.isfinite(float(current.get("state"))):
+                continue
+        except (TypeError, ValueError):
+            continue
+        left = timestamp(current)
+        if index + 1 < len(rows):
+            stop = min(timestamp(rows[index + 1]), until)
+            follows = timestamp(rows[index + 1]) <= until
+        elif state and state.get("state") == current.get("state"):
+            stop, follows = until, False
+        else:
+            continue
+        if stop - left <= MAX_POWER_GAP_SECONDS:
+            continue
+        # A reading that is followed by a row is held to just before that row: the interval
+        # that ends at an unavailable row is discarded, so it must not be left to that pair.
+        end_at = stop - 0.001 if follows else stop
+        stamp = left + step
+        while stamp < end_at:
+            held.append({**current, "last_updated": datetime.fromtimestamp(stamp, timezone.utc).isoformat(),
+                         "last_changed": datetime.fromtimestamp(stamp, timezone.utc).isoformat()})
+            stamp += step
+        if end_at > left:
+            held.append({**current, "last_updated": datetime.fromtimestamp(end_at, timezone.utc).isoformat(),
+                         "last_changed": datetime.fromtimestamp(end_at, timezone.utc).isoformat()})
     return held
 
 

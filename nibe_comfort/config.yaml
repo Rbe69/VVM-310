@@ -1,5 +1,5 @@
 name: NIBE Comfort (egen)
-version: "0.2.36-egen1"
+version: "0.2.36-egen2"
 slug: nibe_comfort
 stage: experimental
 description: Enkel temperaturstyrning med rumsgivare, väder och elpris via myUplink

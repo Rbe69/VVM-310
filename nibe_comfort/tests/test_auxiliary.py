@@ -7,7 +7,7 @@ from urllib.parse import parse_qs, urlsplit
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from auxiliary import context_at, context_history, heater_entities, heater_report
 from controller import ControlError
-from energy import hold_unchanged_tail
+from energy import hold_unchanged_values
 from insights import Insights, pump_device_entities
 from test_controller import config
 from test_energy import START, END, PRICE, price_rows, row
@@ -90,18 +90,37 @@ class HeaterReportTests(unittest.TestCase):
         current = row(POWER, 0, END + 60, device_class="power", state_class="measurement",
                       unit_of_measurement="kW")
         self.assertEqual(report(flat)["totals"]["coverage_seconds"], 0, "A single row is not held by itself")
-        data = report(hold_unchanged_tail(flat, current, END))
+        data = report(hold_unchanged_values(flat, current, END))
         self.assertEqual(data["totals"]["coverage_seconds"], 86400)
         self.assertEqual(data["totals"]["kwh"], 0)
         self.assertEqual(data["runs"], [])
         self.assertEqual(data["runtime_seconds"], 0)
         self.assertEqual(data["skipped_intervals"], 0)
         changed = {**current, "state": "3"}
-        self.assertIs(hold_unchanged_tail(flat, changed, END), flat)
-        self.assertIs(hold_unchanged_tail(flat, None, END), flat)
-        self.assertEqual(hold_unchanged_tail([], current, END), [])
+        self.assertEqual(hold_unchanged_values(flat, changed, END), flat)
+        self.assertEqual(hold_unchanged_values(flat, None, END), flat)
+        self.assertEqual(hold_unchanged_values([], current, END), [])
         late = [row(POWER, 0, END + 10, unit_of_measurement="kW")]
-        self.assertIs(hold_unchanged_tail(late, current, END), late)
+        self.assertEqual(hold_unchanged_values(late, current, END), late)
+
+    def test_flat_value_is_held_up_to_the_next_row_and_unavailable_stays_a_gap(self):
+        kw = dict(device_class="power", state_class="measurement", unit_of_measurement="kW")
+        rows = [row(POWER, 0, START - 900, **kw), row(POWER, "unavailable", END + 500, **kw),
+                row(POWER, 0, END + 560, **kw)]
+        data = report(hold_unchanged_values(rows, None, END))
+        self.assertEqual(data["totals"]["coverage_seconds"], 86400, "Held until the window end, not past the outage")
+        self.assertEqual(data["totals"]["kwh"], 0)
+        inside = [row(POWER, 0, START - 900, **kw), row(POWER, "unavailable", START + 7200, **kw),
+                  row(POWER, 0, START + 7260, **kw)]
+        data = report(hold_unchanged_values(inside, None, END))
+        self.assertEqual(data["hours"][0]["kwh"], 0)
+        self.assertEqual(data["hours"][1]["kwh"], 0)
+        self.assertIsNone(data["hours"][2]["kwh"], "The minute of outage is not covered")
+        self.assertEqual(data["hours"][3]["kwh"], None, "Nothing is held after an unavailable row")
+        running = [row(POWER, 3, START - 900, **kw), row(POWER, 0, START + 3600, **kw)]
+        data = report(hold_unchanged_values(running, None, START + 7200))
+        self.assertAlmostEqual(data["runs"][0]["seconds"], 3600, places=2)
+        self.assertAlmostEqual(data["runs"][0]["kwh"], 3, places=3)
 
     def test_cost_uses_historical_price_segments_and_marks_partial_pricing(self):
         prices = [row(PRICE, 1, START, unit_of_measurement="SEK/kWh"),
