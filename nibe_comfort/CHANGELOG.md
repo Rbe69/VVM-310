@@ -1,5 +1,13 @@
 # Ändringslogg
 
+## 0.2.38
+
+- **Temperatur i alla valda rum**: temperaturen visas nu stor och fet (28 px)
+  med avvikelsen från målet som liten text under, så att värdet går att läsa
+  snabbt på mobil.
+- **Visa underlaget · väder, elpris och kurvförskjutning** i Värmeplan är
+  utfälld från början.
+
 ## 0.2.37
 
 Första versionen under eget förråd. Bygger på NIBE Comfort 0.2.36 från

@@ -405,8 +405,17 @@ function renderRoomImpact() {
       const title = document.createElement("strong");
       title.textContent = `${room.name}${room.priority ? " · prioriterat" : ""}${room.nearest ? " · närmast pumpen" : ""}${settings?.fireplace_rooms.includes(room.entity_id) ? " · kaminrum" : ""}`;
       const value = document.createElement("span");
+      value.className = "room-value";
       const diff = room.temperature == null ? null : room.temperature - settings.target_temperature;
-      value.textContent = `${displayNumber(room.temperature)} °C${diff == null ? "" : Math.abs(diff) < 0.1 ? " · vid målet" : ` · ${displayNumber(Math.abs(diff))}° ${diff > 0 ? "över" : "under"} målet`}`;
+      const degrees = document.createElement("strong");
+      degrees.className = "room-temp";
+      degrees.textContent = `${displayNumber(room.temperature)} °C`;
+      value.append(degrees);
+      if (diff != null) {
+        const note = document.createElement("small");
+        note.textContent = Math.abs(diff) < 0.1 ? "Vid målet" : `${displayNumber(Math.abs(diff))}° ${diff > 0 ? "över" : "under"} målet`;
+        value.append(note);
+      }
       const trend = document.createElement("small");
       trend.textContent = roomTrend(room);
       row.classList.toggle("too-warm", lastStatus.warm_rooms?.includes(room.entity_id) || false);
