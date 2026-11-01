@@ -274,6 +274,18 @@ class PlanTests(unittest.TestCase):
         self.assertIsNone(supply_entity(self.registry, "number.pump_heating_offset_climate_system_2"))
         self.assertIsNone(supply_entity(self.registry[1:], self.offset))
 
+    def test_supply_entity_pairs_an_offset_without_system_name_only_when_the_pump_has_one_supply(self):
+        registry = [
+            {"entity_id": "number.pump_offset", "device_id": "pump", "platform": "myuplink"},
+            {"entity_id": self.supply, "device_id": "pump", "platform": "myuplink"},
+            {"entity_id": "sensor.other_calculated_supply_climate_system_1", "device_id": "other", "platform": "myuplink"},
+        ]
+        self.assertEqual(supply_entity(registry, "number.pump_offset"), self.supply)
+        registry.append({"entity_id": "sensor.pump_calculated_supply_climate_system_2", "device_id": "pump",
+                         "platform": "myuplink"})
+        self.assertIsNone(supply_entity(registry, "number.pump_offset"), "Two systems: cannot tell which one")
+        self.assertIsNone(supply_entity(registry[1:], "number.pump_offset"))
+
     def test_tibber_prices_require_one_home_and_numbers(self):
         response = {"service_response": {"prices": {"hem": [
             {"start_time": "2026-10-23T00:15:00.000+02:00", "price": 1.1},

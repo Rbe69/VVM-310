@@ -1,5 +1,12 @@
 # Ändringslogg
 
+## 0.2.36-egen5
+
+- Värmekurvan hittar nu pumpens beräknade framledning även när förskjutningsentiteten
+  saknar klimatsystem i namnet (till exempel `number.nibe_offset`). Den paras ihop
+  bara när pumpen har exakt en beräknad framledning, annars visas som förut att den
+  inte hittades.
+
 ## 0.2.36-egen4
 
 - Sidväxlaren för Hjälp ligger nu i en egen fil (`pages.js`). Tilläggets

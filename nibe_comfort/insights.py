@@ -440,13 +440,17 @@ def fit_curve(points, offset):
 def supply_entity(registry, offset_entity):
     """The pump's own calculated supply temperature for the same climate system as the offset."""
     selected = next((r for r in registry if r["entity_id"] == offset_entity and r.get("platform") == "myuplink"), None)
-    if not selected or not selected.get("device_id") or "climate_system_" not in offset_entity:
+    if not selected or not selected.get("device_id"):
         return None
-    system = offset_entity.rsplit("climate_system_", 1)[1]
-    matches = [
-        r["entity_id"] for r in registry if r.get("platform") == "myuplink" and r.get("device_id") == selected["device_id"]
-        and r["entity_id"].startswith("sensor.") and r["entity_id"].endswith("_calculated_supply_climate_system_" + system)
-    ]
+    on_pump = [r["entity_id"] for r in registry if r.get("platform") == "myuplink" and r.get("device_id") == selected["device_id"]
+               and r["entity_id"].startswith("sensor.")]
+    if "climate_system_" in offset_entity:
+        system = offset_entity.rsplit("climate_system_", 1)[1]
+        matches = [e for e in on_pump if e.endswith("_calculated_supply_climate_system_" + system)]
+    else:
+        # An offset entity without the climate system in its name (for example number.pump_offset) is
+        # only paired when the pump has exactly one calculated supply temperature.
+        matches = [e for e in on_pump if "_calculated_supply_climate_system_" in e]
     return matches[0] if len(matches) == 1 else None
 
 
