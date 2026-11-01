@@ -340,6 +340,11 @@
           <label for="energy_entity">Pumpens elmätare eller totala eleffekt · valfritt</label>
           <select id="energy_entity" name="energy_entity"></select>
           <p class="hint help">Automatiskt använder en entydig räknare för använd el på samma myUplink-enhet som din pumpanslutning, annars NIBEs totala eleffekt (EL Current power consumption). El och kostnad uppskattas då från W/kW-historiken. Årsstatistik och timräknare används inte. Flera möjliga räknare summeras inte: välj då manuellt. Sparade manuella val behålls. Välj just pumpens använda el eller totala eleffekt, inte husets elmätare, en delkomponent eller producerad värme. Ackumulerade räknare ska ha Wh/kWh/MWh och state_class total eller total_increasing. Värme och varmvatten ingår tillsammans bara om givaren omfattar båda. Valet påverkar inte styrningen.</p>
+          <label for="house_power_entity">Husets effekt just nu · valfritt</label>
+          <select id="house_power_entity" name="house_power_entity"></select>
+          <label for="house_energy_entity">Husets förbrukning i dag · valfritt</label>
+          <select id="house_energy_entity" name="house_energy_entity"></select>
+          <p class="hint help">Visas under Pumpen just nu → Visa elförbrukning. Välj husets totala effekt (W/kW) och husets förbrukning i dag (Wh/kWh/MWh), till exempel från Enegic eller din elmätare. Nord Pool ger bara elpris, så utan val visas fälten tomma. Valen påverkar inte styrningen.</p>
           <div class="metrics">
             <div><span>Nuvarande förskjutning</span><strong id="current-offset">—</strong></div>
             <div><span>Beräknat mål</span><strong id="desired-offset">—</strong></div>

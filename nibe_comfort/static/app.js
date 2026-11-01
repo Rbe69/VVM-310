@@ -197,6 +197,10 @@ function renderSettings(formSettings = settings, preserveView = false) {
   selectOptions("price_entity", (entity) => entity.entity_id.startsWith("sensor."), formSettings.price_entity);
   selectOptions("forecast_entity", (entity) => entity.entity_id.startsWith("weather."), formSettings.forecast_entity);
   selectOptions("energy_entity", (entity) => entity.energy_meter_error === null, formSettings.energy_entity);
+  selectOptions("house_power_entity", (entity) => entity.entity_id.startsWith("sensor.") && ["W", "kW"].includes(entity.unit),
+    formSettings.house_power_entity);
+  selectOptions("house_energy_entity", (entity) => entity.entity_id.startsWith("sensor.") && ["Wh", "kWh", "MWh"].includes(entity.unit),
+    formSettings.house_energy_entity);
   $("price_provider").value = formSettings.price_provider;
   const rooms = entities.filter((entity) => isTemperature(entity) || entity.entity_id.startsWith("climate."));
   for (const id of formSettings.room_sensors) {
@@ -1688,7 +1692,8 @@ const fieldLabels = {
   nearest_thermostat: "Närmast värmepumpen", thermostat_control_enabled: "Termostatbegränsning",
   fireplace_enabled: "Kaminanpassning", fireplace_rooms: "Kaminrum",
   offset_entity: "Pumpanslutning", outdoor_entity: "Utegivare", price_entity: "Elprisgivare", price_provider: "Elpriskälla",
-  forecast_entity: "Prognoskälla", energy_entity: "Pumpens elmätare", base_offset: "Basförskjutning", min_offset: "Lägsta förskjutning",
+  forecast_entity: "Prognoskälla", energy_entity: "Pumpens elmätare",
+  house_power_entity: "Husets effektgivare", house_energy_entity: "Husets energigivare", base_offset: "Basförskjutning", min_offset: "Lägsta förskjutning",
   max_offset: "Högsta förskjutning", weather_gain: "Väderpåverkan", room_gain: "Rumspåverkan",
   price_low: "Lågprisgräns", price_high: "Högprisgräns", cheap_boost: "Höjning vid lågt pris",
   expensive_reduction: "Sänkning vid högt pris", deadband: "Toleransband",

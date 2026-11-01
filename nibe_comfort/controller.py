@@ -30,6 +30,8 @@ DEFAULTS = {
     "price_entity": "",
     "price_provider": "tibber",
     "energy_entity": "",
+    "house_power_entity": "",
+    "house_energy_entity": "",
     "forecast_entity": "",
     "base_offset": 0.0,
     "min_offset": -3.0,
@@ -142,6 +144,8 @@ def validate(config):
         ("outdoor_entity", ("sensor.", "weather.")),
         ("price_entity", ("sensor.",)),
         ("energy_entity", ("sensor.",)),
+        ("house_power_entity", ("sensor.",)),
+        ("house_energy_entity", ("sensor.",)),
         ("forecast_entity", ("weather.",)),
     ):
         value = result[key]
@@ -672,6 +676,8 @@ class Controller:
                 saved.setdefault("fireplace_rooms", [])
                 saved.setdefault("price_provider", "tibber")
                 saved.setdefault("energy_entity", "")
+                saved.setdefault("house_power_entity", "")
+                saved.setdefault("house_energy_entity", "")
             self.config = validate(saved)
         self.events = EventLog(Path(data_dir) / "events.sqlite")
         self.pending = None

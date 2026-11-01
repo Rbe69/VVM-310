@@ -13,7 +13,7 @@ from urllib.parse import quote, urlencode
 
 from controller import ControlError, control_rooms, device_peers, fresh_entity, next_step, number, price_contribution, temperature
 from learning import LearningStore, hourly_means, learn, lead_hours, predict, preheat_windows, shift_at
-from energy import POWER_UNITS, consumption_report, discover_meter, hold_unchanged_values, meter_error, produced_energy
+from energy import ENERGY_UNITS, POWER_UNITS, consumption_report, discover_meter, hold_unchanged_values, meter_error, produced_energy
 from auxiliary import heater_entities, heater_report
 
 
@@ -142,7 +142,18 @@ def overview(states, registry, config, now):
     tibber_ids = {r["entity_id"] for r in registry
                   if config["price_provider"] == "tibber" and r.get("platform") == "tibber"}
     house = []
-    for device_class, label in (("power", "Husets effekt just nu"), ("energy", "Husets förbrukning i dag")):
+    for device_class, label, key in (("power", "Husets effekt just nu", "house_power_entity"),
+                                     ("energy", "Husets förbrukning i dag", "house_energy_entity")):
+        if config.get(key):
+            # A sensor the user picked (for example from Enegic) is used as it is, with the unit checked.
+            chosen = by_id.get(config[key])
+            units = POWER_UNITS if device_class == "power" else ENERGY_UNITS
+            if chosen and chosen["attributes"].get("unit_of_measurement") in units:
+                house.append(reading(chosen, label, config["max_age_minutes"], now))
+            else:
+                house.append({"label": label, "value": None, "error": (
+                    "Vald givare saknas eller har fel enhet (W/kW för effekt, Wh/kWh/MWh för energi).")})
+            continue
         candidates = []
         for eid in tibber_ids:
             entity = by_id.get(eid)
@@ -169,6 +180,8 @@ def overview(states, registry, config, now):
         "checked_at": now, "pump": pump, "pump_electricity": pump_electricity,
         "house": house, "price": price,
         "electricity_note": (
+            "Husets värden kommer från givarna du valt under inställningarna. "
+            if config.get("house_power_entity") and config.get("house_energy_entity") else
             "Elpriset kommer från Nord Pool. Husets förbrukning från exempelvis Enegic är separat och hämtas inte automatiskt här. "
             if config["price_provider"] == "nordpool" else
             "Husets Tibber-värden gäller hela huset, inte bara pumpen. "
@@ -791,7 +804,8 @@ class Insights:
         return self.cached("registry", 300, self.ha.integration_registry)
 
     def overview(self, config):
-        key = ("overview", config["offset_entity"], config["price_entity"], config["price_provider"], config["max_age_minutes"])
+        key = ("overview", config["offset_entity"], config["price_entity"], config["price_provider"], config["max_age_minutes"],
+               config.get("house_power_entity", ""), config.get("house_energy_entity", ""))
         return self.cached(key, 60, lambda: overview(self.ha.states(), self.registry(), config, time.time()))
 
     def energy(self, config):

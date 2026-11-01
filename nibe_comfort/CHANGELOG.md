@@ -1,5 +1,14 @@
 # Ändringslogg
 
+## 0.2.40
+
+- **Husets effekt just nu** och **Husets förbrukning i dag** (Pumpen just nu →
+  Visa elförbrukning) kan nu väljas under Inställningar → Din värmepump, till
+  exempel från Enegic eller din elmätare. Tidigare fylldes fälten bara i för
+  Tibber, så med Nord Pool stod de tomma. Effekt ska vara W/kW och energi
+  Wh/kWh/MWh, annars visas ett felmeddelande. Valen påverkar inte styrningen.
+  Utan val fungerar det som förut.
+
 ## 0.2.39
 
 - **Pumplarm** hittas nu även när pumpen har en annan givare som slutar på

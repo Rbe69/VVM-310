@@ -97,6 +97,27 @@ class OverviewTests(unittest.TestCase):
                      if item["key"] == "alarm")
         self.assertIsNone(alarm["value"], "Two binary alarm sensors are still ambiguous")
 
+    def test_chosen_house_sensors_are_used_with_unit_checks(self):
+        power = entity("sensor.house_power", 6200, unit_of_measurement="W", device_class="power")
+        energy = entity("sensor.house_today", 75.3, unit_of_measurement="kWh", device_class="energy")
+        states = [*self.states, power, energy]
+        cfg = {**self.config, "price_provider": "nordpool",
+               "house_power_entity": power["entity_id"], "house_energy_entity": energy["entity_id"]}
+        data = overview(states, self.registry, cfg, self.now)
+        self.assertEqual([item["value"] for item in data["house"]], ["6200", "75.3"])
+        self.assertEqual(data["house"][0]["unit"], "W")
+        self.assertIn("givarna du valt", data["electricity_note"])
+        wrong_unit = overview(states, self.registry, {**cfg, "house_power_entity": energy["entity_id"]}, self.now)
+        self.assertIsNone(wrong_unit["house"][0]["value"])
+        self.assertIn("fel enhet", wrong_unit["house"][0]["error"])
+        self.assertEqual(wrong_unit["house"][1]["value"], "75.3")
+        missing = overview(states, self.registry, {**cfg, "house_energy_entity": "sensor.gone"}, self.now)
+        self.assertIsNone(missing["house"][1]["value"])
+        self.assertEqual(missing["house"][0]["value"], "6200")
+        for key in ("house_power_entity", "house_energy_entity"):
+            with self.assertRaises(ControlError):
+                config(**{key: "number.not_a_sensor"})
+
     def test_other_device_never_used_for_selected_pump(self):
         self.registry[1]["device_id"] = "another-pump"
         data = overview(self.states, self.registry, self.config, self.now)
