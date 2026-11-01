@@ -62,3 +62,4 @@
 :root[data-theme=dark] .test-steps li.now{background:#2e2716;border-color:#8a6a2a}:root[data-theme=dark] .test-steps li.fail{background:#33201a;border-color:#7a4433}
 :root[data-theme=dark] .test-values div{background:#25302c}
 .chart-band.fireplace{fill:#d89020;opacity:.14}.key.fireplace{color:#a56a11}
+.page-tabs{display:flex;gap:8px;align-items:center}.page-tabs a{text-decoration:none;color:var(--ink);cursor:pointer}.page-tabs a:hover{border-color:var(--green);color:var(--green)}.page-tabs a[aria-current]{background:var(--green);border-color:var(--green);color:#fff}body:not(.page-help) .help{display:none!important}#page-help .help-group h2{margin-top:0}#page-help .help-group>*+*{margin-top:12px}#page-help .help-group .disclosure{margin-top:12px}@media(max-width:600px){.page-tabs{order:3;width:100%}}

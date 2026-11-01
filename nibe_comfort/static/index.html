@@ -12,12 +12,13 @@
 <body>
   <header>
     <div><span class="eyebrow">DIN VÄRME, BEGRIPLIG</span><h1>NIBE <span>Comfort</span></h1></div>
+    <nav class="page-tabs" aria-label="Sidor"><a href="#/" id="tab-main" class="badge" aria-current="page">Översikt</a><a href="#hjalp" id="tab-help" class="badge">Hjälp</a></nav>
     <div class="header-actions">
       <button id="theme-toggle" type="button" class="badge theme-toggle">Tema: auto</button>
       <span id="mode" class="badge">Ansluter…</span>
     </div>
   </header>
-  <main>
+  <main id="page-main">
     <nav class="page-nav" aria-label="Hitta på sidan">
       <a href="#status-title">Översikt</a>
       <a href="#hot-water-card">Varmvatten</a>
@@ -29,7 +30,7 @@
       <a href="#log-panel">Ändringslogg</a>
     </nav>
     <div id="notice" role="status" hidden></div>
-    <section class="hero card" aria-labelledby="status-title">
+    <section class="hero card" aria-labelledby="status-title" data-help-title="Så fungerar värmen">
       <div class="hero-head">
         <span class="eyebrow">HEMMA JUST NU</span>
         <h2 id="status-title">Välkommen till enklare värme</h2>
@@ -59,7 +60,7 @@
       </div>
       <p id="hero-extra" class="hero-extra"></p>
       <p id="updated" class="muted"></p>
-      <details class="disclosure hero-help">
+      <details class="disclosure hero-help help">
         <summary>Så fungerar värmen · tre saker att känna till</summary>
         <div class="explainer-grid">
           <div><strong>1. Du väljer ett mål</strong><p>Målet gäller snittet av dina prioriterade rum, eller alla valda rum om du inte har valt några. Det är inte samma sak som termostatens börvärde.</p></div>
@@ -69,7 +70,7 @@
       </details>
       <details id="room-impact">
         <summary>Temperatur i alla valda rum</summary>
-        <p>Förskjutningen påverkar hela huset, inte bara prioriterade rum. Här ser du uppmätta värden och förändring senaste timmen, inte en prognos eller bevis på vad som orsakat förändringen.</p>
+        <p class="help">Förskjutningen påverkar hela huset, inte bara prioriterade rum. Här ser du uppmätta värden och förändring senaste timmen, inte en prognos eller bevis på vad som orsakat förändringen.</p>
         <p id="room-area-status" class="hint" role="status"></p>
         <div id="room-impact-list"></div>
       </details>
@@ -85,13 +86,13 @@
       <h3>Efter senaste bekräftade höjningen</h3>
       <p id="comfort-change"></p>
       <ul id="comfort-response"></ul>
-      <p class="hint">Rådgivande, ändrar inga inställningar. Uppmätt temperaturförändring är inte bevis på pumpens effekt: väder, sol, ventilation och användning påverkar också. Vi kan inte avgöra flöde eller injustering från enbart temperaturgivare.</p>
+      <p class="hint help">Rådgivande, ändrar inga inställningar. Uppmätt temperaturförändring är inte bevis på pumpens effekt: väder, sol, ventilation och användning påverkar också. Vi kan inte avgöra flöde eller injustering från enbart temperaturgivare.</p>
       </details>
     </section>
 
     <section class="card dashboard">
       <div class="section-heading"><div><span class="section-number">IGÅR, I DAG OCH I MORGON</span><h2>Värmeplan</h2></div><button type="button" id="refresh-plan" class="secondary">Uppdatera plan</button></div>
-      <p class="section-intro">Vad pumpen har gjort och vad som planeras härnäst. Planen räknas om när temperatur, väder eller pris ändras.</p>
+      <p class="section-intro help">Vad pumpen har gjort och vad som planeras härnäst. Planen räknas om när temperatur, väder eller pris ändras.</p>
       <p id="plan-status" role="status">Hämtar värmeplan…</p>
       <ul id="plan-changes" class="plan-changes"></ul>
       <p id="plan-notes" class="explanation"></p>
@@ -113,7 +114,7 @@
       <details class="disclosure" id="curve-details">
         <summary>Avancerat · pumpens uppskattade värmekurva</summary>
       <h3>Värmekurvan som den är inställd nu</h3>
-      <p class="hint">Uppskattad från pumpens egen beräknade framledning de senaste 7 dygnen. Gröna punkter och linjen gäller nuvarande förskjutning, grå punkter andra förskjutningar. Stor ring = just nu. Det skuggade fältet är utetemperaturen i prognosen.</p>
+      <p class="hint help">Uppskattad från pumpens egen beräknade framledning de senaste 7 dygnen. Gröna punkter och linjen gäller nuvarande förskjutning, grå punkter andra förskjutningar. Stor ring = just nu. Det skuggade fältet är utetemperaturen i prognosen.</p>
       <div id="plan-curve" class="chart" role="img" aria-label="Framledningstemperatur mot utetemperatur"></div>
       <p id="plan-curve-status" class="hint"></p>
       </details>
@@ -122,7 +123,7 @@
     <section class="card dashboard" id="learning-card">
       <div class="section-heading"><div><span class="section-number">SJÄLVLÄRANDE</span><h2>Ditt hus lär sig</h2></div><button type="button" id="refresh-learning" class="secondary">Uppdatera</button></div>
       <p id="learn-status" role="status">Hämtar husmodellen…</p>
-      <p class="section-intro">En försiktig uppskattning av hur snabbt huset blir varmt. Ju mer historik, desto bättre underlag – det är fortfarande en prognos.</p>
+      <p class="section-intro help">En försiktig uppskattning av hur snabbt huset blir varmt. Ju mer historik, desto bättre underlag – det är fortfarande en prognos.</p>
       <p id="learn-message" class="explanation"></p>
       <details class="disclosure" id="learning-details">
         <summary>Fördjupning · inlärning, siffror och temperaturprognos</summary>
@@ -135,15 +136,15 @@
       </details>
       <div id="preheat-settings">
       <h3>Lagra lite värme före dyra timmar</h3>
-      <p>Värm huset lite extra när timmarna före en dyrperiod är billigare. Under dyrperioden sänks det tillfälliga rumsmålet, så att huset kan använda den lagrade värmen och svalna försiktigt. Kurvförskjutningen anpassas genom den vanliga rumsstyrningen.</p>
+      <p class="help">Värm huset lite extra när timmarna före en dyrperiod är billigare. Under dyrperioden sänks det tillfälliga rumsmålet, så att huset kan använda den lagrade värmen och svalna försiktigt. Kurvförskjutningen anpassas genom den vanliga rumsstyrningen.</p>
       <div class="learn-controls">
         <label class="toggle"><input type="checkbox" id="preheat_enabled" name="preheat_enabled" form="settings"> Planera värmen före dyra timmar</label>
         <div><label for="preheat_degrees">Tillfällig måländring uppåt/nedåt · °C</label><input id="preheat_degrees" name="preheat_degrees" form="settings" type="number" min="0.1" max="1.5" step="0.1" required></div>
         <button type="submit" form="settings" id="save-preheat">Spara inställningar</button>
       </div>
       <p id="preheat-example" class="explanation" role="status"></p>
-      <p class="hint">Måländringen är inte en garanti för rummens temperatur eller besparing. Huset reagerar långsamt; kurvgränser, tolerans och väntetid gäller fortfarande. Sparad termostatbegränsning kan bromsa förvärmningen eftersom den följer ditt vanliga mål.</p>
-      <details class="disclosure"><summary>Hur väljs tiderna?</summary><p>Kräver kommande priser från din sparade elpriskälla, inte bara priset just nu. Dyra perioder är minst en timme med pris minst 25 % över det kommande dygnets mittpris. Förvärmning planeras bara om timmarna före är minst 20 % billigare. Ett lägre mål kan planeras under dyrperioden även utan föregående förvärmning. Starttiden är normalt tre timmar före och anpassas till 1–6 timmar när husmodellen har tillräckligt underlag. Saknas prisunderlag används ditt vanliga mål och orsaken visas i planen.</p></details>
+      <p class="hint help">Måländringen är inte en garanti för rummens temperatur eller besparing. Huset reagerar långsamt; kurvgränser, tolerans och väntetid gäller fortfarande. Sparad termostatbegränsning kan bromsa förvärmningen eftersom den följer ditt vanliga mål.</p>
+      <details class="disclosure help"><summary>Hur väljs tiderna?</summary><p>Kräver kommande priser från din sparade elpriskälla, inte bara priset just nu. Dyra perioder är minst en timme med pris minst 25 % över det kommande dygnets mittpris. Förvärmning planeras bara om timmarna före är minst 20 % billigare. Ett lägre mål kan planeras under dyrperioden även utan föregående förvärmning. Starttiden är normalt tre timmar före och anpassas till 1–6 timmar när husmodellen har tillräckligt underlag. Saknas prisunderlag används ditt vanliga mål och orsaken visas i planen.</p></details>
       </div>
       <ul id="learn-windows" class="plan-changes"></ul>
     </section>
@@ -152,19 +153,19 @@
       <span class="section-number">BRASKAMIN / EXTRAVÄRME</span>
       <h2>Värme från kaminen</h2>
       <p id="fireplace-status" role="status">Kaminobservation är av tills du väljer rum och sparar.</p>
-      <p class="section-intro">Automatisk temperaturanalys kan misstänka lokal extravärme, men inte skilja säkert mellan eldning, sol och andra värmekällor. Detta är inte ett brand- eller säkerhetslarm.</p>
-      <p class="hint warning">Ditt prioriterade snitt styr fortfarande. Vid bestående misstänkt extravärme läggs ett extra kaminbidrag på −1 steg till den beräknade kurvförskjutningen, men bara om det styrande snittet inte är under ditt vanliga mål minus toleransen. Kurvan påverkar hela huset; andra rum kan bli kallare och sol kan ge falska träffar. Vanliga intervall, steglängd och gränser gäller.</p>
+      <p class="section-intro help">Automatisk temperaturanalys kan misstänka lokal extravärme, men inte skilja säkert mellan eldning, sol och andra värmekällor. Detta är inte ett brand- eller säkerhetslarm.</p>
+      <p class="hint warning help">Ditt prioriterade snitt styr fortfarande. Vid bestående misstänkt extravärme läggs ett extra kaminbidrag på −1 steg till den beräknade kurvförskjutningen, men bara om det styrande snittet inte är under ditt vanliga mål minus toleransen. Kurvan påverkar hela huset; andra rum kan bli kallare och sol kan ge falska träffar. Vanliga intervall, steglängd och gränser gäller.</p>
       <div class="learn-controls">
         <label class="toggle"><input type="checkbox" id="fireplace_enabled" name="fireplace_enabled" form="settings"> Jag har braskamin · upptäck extravärme och anpassa kurvan</label>
         <button type="submit" form="settings" id="save-fireplace">Spara inställningar</button>
       </div>
       <label for="fireplace_rooms">Temperaturkällor i rummet med kamin</label>
       <div id="fireplace_rooms" class="sensor-list" role="group" aria-describedby="fireplace-help"></div>
-      <p id="fireplace-help" class="hint">Välj bland rumsgivarna i inställningarna. Välj bara kaminens rum, inte alla rum värmen sprids till. Minst ett annat valt rum behövs som jämförelse. Inget börjar gälla förrän du sparar.</p>
+      <p id="fireplace-help" class="hint help">Välj bland rumsgivarna i inställningarna. Välj bara kaminens rum, inte alla rum värmen sprids till. Minst ett annat valt rum behövs som jämförelse. Inget börjar gälla förrän du sparar.</p>
       <p id="fireplace-learning" class="explanation"></p>
       <p id="fireplace-control" class="explanation" role="status"></p>
       <ul id="fireplace-effects"></ul>
-      <details class="disclosure">
+      <details class="disclosure help">
         <summary>Så upptäcks och lärs extravärmen</summary>
         <p>Vi jämför kaminrummets snabba temperaturökning under ungefär en timme med övriga valda rum. Mönstret måste bestå innan en misstänkt period sparas. En långsam eller jämnt spridd värmeökning kan missas; sol kan ge falska träffar. Aktuella värden krävs i alla valda rum.</p>
         <p>Efter minst tre avslutade förlopp med samma rumsval visas typisk observerad varaktighet och temperaturökning i rummen. Det visar vad som hände samtidigt, inte hur mycket värme kaminen säkert gav eller hur länge glöden varar. Varaktigheten gäller tills den lokala temperaturskillnaden klingat av, inte tills hela huset svalnat.</p>
@@ -188,7 +189,7 @@
       </div>
       <h3>När används varmvattnet?</h3>
       <p id="hw-pattern" class="explanation"></p>
-      <p class="hint">Varmvattenkortet visar bara information. Nivån är en uppskattning, inte uppmätta liter; tillägget ändrar inte varmvatteninställningarna.</p>
+      <p class="hint help">Varmvattenkortet visar bara information. Nivån är en uppskattning, inte uppmätta liter; tillägget ändrar inte varmvatteninställningarna.</p>
       <details class="disclosure" id="hot-water-details">
         <summary>Visa användning och temperaturhistorik</summary>
       <div id="hw-hours" class="chart" role="img" aria-label="Tappningar per timme på dygnet"></div>
@@ -196,7 +197,7 @@
       <h3>Temperatur i tanken · senaste 2 dygnen</h3>
       <div id="hw-chart" class="chart" role="img" aria-label="Varmvattnets temperatur"></div>
       <div id="hw-legend" class="chart-legend"></div>
-      <p class="hint">Tappningar syns som snabba fall i laddgivaren BT6 längre ner i tanken när kallt vatten strömmar in. BT7 i toppen ändras mindre. Skuggade fält = pumpen laddar varmvatten.</p>
+      <p class="hint help">Tappningar syns som snabba fall i laddgivaren BT6 längre ner i tanken när kallt vatten strömmar in. BT7 i toppen ändras mindre. Skuggade fält = pumpen laddar varmvatten.</p>
       <h3>Senaste tappningarna</h3>
       <ul id="hw-list" class="plan-changes"></ul>
       </details>
@@ -204,7 +205,7 @@
 
     <section class="card dashboard" id="temperature-section">
       <div class="section-heading"><div><span class="section-number">SENASTE DYGNET</span><h2>Temperaturen över tid</h2></div><button type="button" id="refresh-history" class="secondary">Uppdatera graf</button></div>
-      <p class="section-intro">Följ hur varmt det faktiskt varit. Heldragen linje är uppmätt temperatur, streckad linje i rumsgraferna är termostatens börvärde.</p>
+      <p class="section-intro help">Följ hur varmt det faktiskt varit. Heldragen linje är uppmätt temperatur, streckad linje i rumsgraferna är termostatens börvärde.</p>
       <label for="history-entity">Visa</label>
       <select id="history-entity" class="compact-select"><option value="">Alla rum</option></select>
       <p id="history-status" role="status">Hämtar temperaturhistorik…</p>
@@ -213,13 +214,13 @@
       <p id="history-changes-status" role="status"></p>
       <details class="disclosure" id="history-decisions">
         <summary>Varför ändrades värmen? · beslut och förklaringar</summary>
-      <p class="hint">K = kurvförskjutning, T = termostat. Markeringarna visar loggade begäranden och kurvobservationer. Återläst betyder bekräftat av HA-integrationen, inte en oberoende fysisk mätning. En begäran utan återläsning är inte en bekräftad ändring. Positivt beslutsbidrag begär mer värme, negativt mindre. Temperaturförändring efteråt bevisar inte vad som orsakade den.</p>
+      <p class="hint help">K = kurvförskjutning, T = termostat. Markeringarna visar loggade begäranden och kurvobservationer. Återläst betyder bekräftat av HA-integrationen, inte en oberoende fysisk mätning. En begäran utan återläsning är inte en bekräftad ändring. Positivt beslutsbidrag begär mer värme, negativt mindre. Temperaturförändring efteråt bevisar inte vad som orsakade den.</p>
       <ul id="history-changes" class="plan-changes"></ul>
       </details>
       <h3 id="thermostat-charts-title">Rum för rum · Home Assistant-områden</h3>
       <p id="history-area-status" class="hint" role="status"></p>
       <div id="thermostat-charts" class="thermostat-charts"></div>
-      <p class="hint">Korten grupperas efter rummets område i Home Assistant. De visar temperaturförändringen under dygnet och termostatändringar som loggats i just det området. Kurvförskjutning är en gemensam ändring för hela huset och visas separat i styrhistoriken, inte som en ändring i ett enskilt rum. Om ett rum saknar område tilldelar du området till enheten eller entiteten i Home Assistant. Givare rapporterar bara när värdet ändras, så ett värde gäller tills nästa rapport. Luckor betyder att givaren var otillgänglig.</p>
+      <p class="hint help">Korten grupperas efter rummets område i Home Assistant. De visar temperaturförändringen under dygnet och termostatändringar som loggats i just det området. Kurvförskjutning är en gemensam ändring för hela huset och visas separat i styrhistoriken, inte som en ändring i ett enskilt rum. Om ett rum saknar område tilldelar du området till enheten eller entiteten i Home Assistant. Givare rapporterar bara när värdet ändras, så ett värde gäller tills nästa rapport. Luckor betyder att givaren var otillgänglig.</p>
       <details class="disclosure"><summary>Avancerat · mätpunkter som tabell</summary><div id="history-table" class="table-scroll"></div></details>
     </section>
 
@@ -227,20 +228,20 @@
       <span class="section-number">PUMPEN JUST NU</span>
       <h2>Värme, drift och el</h2>
       <p id="overview-status" role="status">Hämtar pumpstatus…</p>
-      <p class="section-intro">Rapporterad drift och eventuella larm. Saknad information betyder inte att pumpen är avstängd.</p>
+      <p class="section-intro help">Rapporterad drift och eventuella larm. Saknad information betyder inte att pumpen är avstängd.</p>
       <div id="pump-metrics" class="live-grid"></div>
       <details class="disclosure" id="electricity-details">
         <summary>Visa elförbrukning · pumpen jämfört med hela huset</summary>
       <h3>Elförbrukning</h3>
       <div id="electricity-metrics" class="live-grid"></div>
       <p id="electricity-note" class="hint"></p>
-      <p class="hint">Värden rapporterade via Home Assistant. Saknade eller gamla uppgifter visas inte som noll eller ”av”.</p>
+      <p class="hint help">Värden rapporterade via Home Assistant. Saknade eller gamla uppgifter visas inte som noll eller ”av”.</p>
       </details>
     </section>
 
     <section class="card dashboard" id="energy-section">
       <div class="section-heading"><div><span class="section-number">SENASTE 24 AVSLUTADE TIMMARNA</span><h2>Pumpens el och kostnad</h2></div><button type="button" id="refresh-energy" class="secondary">Uppdatera</button></div>
-      <p class="section-intro">Följ använd el och jämför med våra loggade ändringar. En entydig ackumulerad elmätare används automatiskt från vald myUplink-pump, annars pumpens totala eleffekt. Vid effektmätning uppskattas el och kostnad från historiken. Du kan välja en annan givare i inställningarna.</p>
+      <p class="section-intro help">Följ använd el och jämför med våra loggade ändringar. En entydig ackumulerad elmätare används automatiskt från vald myUplink-pump, annars pumpens totala eleffekt. Vid effektmätning uppskattas el och kostnad från historiken. Du kan välja en annan givare i inställningarna.</p>
       <p id="energy-status" role="status">Letar efter pumpens elmätare…</p>
       <div id="energy-data" hidden>
       <div id="energy-metrics" class="live-grid"></div>
@@ -248,10 +249,10 @@
       <p id="energy-price-status" role="status"></p>
       <div id="energy-cost-chart" class="chart" role="img" aria-label="Beräknad kostnad per timme med styrmarkeringar"></div>
       <p class="hint">K = kurvförskjutning, T = termostat, I = sparade inställningar. En begäran utan återläsning är inte en bekräftad ändring. Graferna visar bara fullständiga timmar; tabellen visar datatäckningen.</p>
-      <p class="hint">Timfördelningen är uppskattad: ökningen i elmätaren fördelas jämnt mellan dess rapporter (högst två timmar). Kostnaden beräknas med historiken från din sparade prisgivare, aldrig dagens pris för äldre timmar. Bara avgifter och moms som redan finns i givaren ingår; fast avgift ingår inte. Luckor, otillgängliga värden och räknaråterställningar räknas inte som noll. Producerad värme är inte använd el.</p>
+      <p class="hint help">Timfördelningen är uppskattad: ökningen i elmätaren fördelas jämnt mellan dess rapporter (högst två timmar). Kostnaden beräknas med historiken från din sparade prisgivare, aldrig dagens pris för äldre timmar. Bara avgifter och moms som redan finns i givaren ingår; fast avgift ingår inte. Luckor, otillgängliga värden och räknaråterställningar räknas inte som noll. Producerad värme är inte använd el.</p>
       <details class="disclosure">
         <summary>Före och efter våra ändringar</summary>
-        <p class="hint">Visar närmaste hela timmen före och efter ändringens timme. Mellantimmen hoppas över. Bekräftade ändringar avser HA:s återläsning, inte en oberoende fysisk mätning. Väder, varmvatten, kamin och värmesystemets tröghet påverkar också förbrukningen: skillnaden är en observation, inte bevisad effekt eller besparing.</p>
+        <p class="hint help">Visar närmaste hela timmen före och efter ändringens timme. Mellantimmen hoppas över. Bekräftade ändringar avser HA:s återläsning, inte en oberoende fysisk mätning. Väder, varmvatten, kamin och värmesystemets tröghet påverkar också förbrukningen: skillnaden är en observation, inte bevisad effekt eller besparing.</p>
         <ul id="energy-comparisons" class="plan-changes"></ul>
       </details>
       <details class="disclosure">
@@ -263,7 +264,7 @@
 
     <section class="card dashboard" id="auxiliary-section">
       <div class="section-heading"><div><span class="section-number">ELTILLSATS · SENASTE 24 AVSLUTADE TIMMARNA</span><h2>När går elpatronen?</h2></div><button type="button" id="refresh-auxiliary" class="secondary">Uppdatera</button></div>
-      <p class="section-intro">Se elpatronens egen effekt, observerade körperioder och uppskattad kostnad. Detta är en del av pumpens el, inte en extra kostnad att lägga ovanpå pumpens totalsiffra.</p>
+      <p class="section-intro help">Se elpatronens egen effekt, observerade körperioder och uppskattad kostnad. Detta är en del av pumpens el, inte en extra kostnad att lägga ovanpå pumpens totalsiffra.</p>
       <p id="auxiliary-status" role="status">Hämtar elpatronens historik…</p>
       <div id="auxiliary-data" hidden>
         <p id="auxiliary-current" role="status"></p>
@@ -273,12 +274,12 @@
         <p id="auxiliary-price-status" role="status"></p>
         <details class="disclosure">
           <summary>Körningar, kostnad och vad som hände samtidigt</summary>
-          <p>En körperiod betyder att elpatronens rapporterade effekt var över noll. Effektsteg inom samma period räknas inte som nya starter. Dataluckor delar upp perioderna; okänd början eller slut är inte en bekräftad start eller ett stopp.</p>
-          <p>Driftläge, gradminuter, ute- och varmvattentemperatur visas vid periodens början om färsk historik finns (högst 15 minuter gammal). Det är samtidiga observationer, inte en säker startorsak. Pumpens interna reglering kan exempelvis begära tillsats vid värmeunderskott eller varmvattenbehov; givarna här visar inte säkert vilket villkor som utlöste det.</p>
-          <p class="hint">På liten skärm kan du rulla tabellen i sidled för att se alla uppgifter.</p>
+          <p class="help">En körperiod betyder att elpatronens rapporterade effekt var över noll. Effektsteg inom samma period räknas inte som nya starter. Dataluckor delar upp perioderna; okänd början eller slut är inte en bekräftad start eller ett stopp.</p>
+          <p class="help">Driftläge, gradminuter, ute- och varmvattentemperatur visas vid periodens början om färsk historik finns (högst 15 minuter gammal). Det är samtidiga observationer, inte en säker startorsak. Pumpens interna reglering kan exempelvis begära tillsats vid värmeunderskott eller varmvattenbehov; givarna här visar inte säkert vilket villkor som utlöste det.</p>
+          <p class="hint help">På liten skärm kan du rulla tabellen i sidled för att se alla uppgifter.</p>
           <div id="auxiliary-runs" class="table-scroll" tabindex="0" role="region" aria-label="Elpatronens körperioder och samtidiga observationer"></div>
         </details>
-        <p class="hint">kWh och kostnad uppskattas från elpatronens W/kW-historik med historiska priser från din valda elpriskälla. Senaste effekt hålls till nästa rapport, högst 15 minuter. Ingen extrapolering efter sista rapporten. Luckor visas som okända, aldrig som ”av” eller noll. Visningen ändrar inga inställningar i pumpen.</p>
+        <p class="hint help">kWh och kostnad uppskattas från elpatronens W/kW-historik med historiska priser från din valda elpriskälla. Senaste effekt hålls till nästa rapport, högst 15 minuter. Ingen extrapolering efter sista rapporten. Luckor visas som okända, aldrig som ”av” eller noll. Visningen ändrar inga inställningar i pumpen.</p>
       </div>
     </section>
 
@@ -289,12 +290,12 @@
         <span id="settings-save-status" role="status">Inga osparade ändringar.</span>
         <button id="save-near" type="submit">Spara ändringar</button>
       </div>
-      <p class="settings-guide">Börja med <strong>rum och måltemperatur</strong>. Pumpanslutning, väder och elpris behöver normalt bara ställas in en gång. Inget ändras förrän du sparar.</p>
+      <p class="settings-guide help">Börja med <strong>rum och måltemperatur</strong>. Pumpanslutning, väder och elpris behöver normalt bara ställas in en gång. Inget ändras förrän du sparar.</p>
       <div class="grid">
         <section class="card">
           <span class="section-number">01 / KOMFORT</span>
           <h2>Vilka rum räknas?</h2>
-          <p>Pumpens grundkurva finns kvar. Vi justerar förskjutningen försiktigt för att nå temperaturen du valt högst upp.</p>
+          <p class="help">Pumpens grundkurva finns kvar. Vi justerar förskjutningen försiktigt för att nå temperaturen du valt högst upp.</p>
           <label for="room_sensors">Rumsgivare</label>
           <div class="room-picker-toolbar">
             <input type="search" id="room-search" placeholder="Sök rum eller termostat" aria-label="Sök temperaturkälla">
@@ -303,17 +304,17 @@
           </div>
           <p id="selected-room-sensors" class="hint" role="status"></p>
           <button id="remove-room-sensors" type="button" class="secondary" hidden>Avmarkera separata givare · behåll termostater</button>
-          <p class="hint" id="room-help">Markera rummen som ska visas. Utan prioriterade givare styr deras gemensamma snitt värmen. Även golvvärme (climate) kan väljas: vi läser uppmätt temperatur, inte termostatens börvärde. Välj inte både en termostat och dess separata givare för samma rum, eftersom rummet då räknas dubbelt.</p>
+          <p class="hint help" id="room-help">Markera rummen som ska visas. Utan prioriterade givare styr deras gemensamma snitt värmen. Även golvvärme (climate) kan väljas: vi läser uppmätt temperatur, inte termostatens börvärde. Välj inte både en termostat och dess separata givare för samma rum, eftersom rummet då räknas dubbelt.</p>
           <div id="room_sensors" class="room-picker" role="group" aria-describedby="room-help"></div>
           <label for="priority_sensors">Prioriterade rum · valfritt, högst 2 givare</label>
-          <p class="hint" id="priority-help">Välj 1–2 av rummen ovan. Temperaturmålet gäller deras snitt (om du väljer två väger de lika); övriga rum visas men styr inte mot målet och kan ändå bli varmare. Ingen prioritering väljs automatiskt.</p>
+          <p class="hint help" id="priority-help">Välj 1–2 av rummen ovan. Temperaturmålet gäller deras snitt (om du väljer två väger de lika); övriga rum visas men styr inte mot målet och kan ändå bli varmare. Ingen prioritering väljs automatiskt.</p>
           <div id="priority_sensors" class="sensor-list" role="group" aria-describedby="priority-help"></div>
           <label for="nearest_thermostat">Termostat närmast värmepumpen</label>
           <select id="nearest_thermostat"><option value="">Inte markerad</option></select>
-          <p class="hint">Endast en informationsmarkering. Avstånd används inte för styrning och den undantas inte från begränsning.</p>
+          <p class="hint help">Endast en informationsmarkering. Avstånd används inte för styrning och den undantas inte från begränsning.</p>
           <label class="toggle"><input type="checkbox" id="thermostat_control_enabled"> Begränsa övertemperatur med termostater</label>
-          <p class="hint warning">Valfritt: sänker ett högre termostatbörvärde till ditt mål vid minst 0,5 °C övertemperatur. Höjer aldrig lägre börvärden. Avstängning återställer inte ändrade värden. Säkerställ tillräckligt flöde i värmesystemet.</p>
-          <details class="disclosure">
+          <p class="hint warning help">Valfritt: sänker ett högre termostatbörvärde till ditt mål vid minst 0,5 °C övertemperatur. Höjer aldrig lägre börvärden. Avstängning återställer inte ändrade värden. Säkerställ tillräckligt flöde i värmesystemet.</p>
+          <details class="disclosure help">
             <summary>Så fungerar termostatbegränsningen · krav och skydd</summary>
           <p class="hint">Steglängd kontrolleras när den rapporteras. Om den saknas skickas målet utan avrundning inom termostatens gränser; exakt återläsning krävs fortfarande.</p>
           <p class="hint">Av från början. Kräver att alla valda rum är termostater i värmeläge (heat), att huvudautomatiken är på och att målet passar termostaternas steglängd. Vid minst 0,5 °C över ditt sparade mål sänks ett högre börvärde till rumsmålet, även vid förvärmning. Lägre börvärden höjs aldrig och värmen stängs inte av. Återställning gör du själv; avstängning återställer inte redan ändrade värden. Högst en bekräftad begränsning under varje varm period, minst 30 minuter mellan försök. Misslyckade eller obekräftade försök kan upprepas efter återläsning om börvärdet och målet är oförändrade. Omstart behåller återstående väntetid från senaste sparade försök, utan extra startväntan. Ny period kan börja först när rummet svalnat till högst 0,2 °C över målet. Kontrollera att anläggningen har tillräckligt flöde när termostaterna stryper.</p>
@@ -325,19 +326,19 @@
         <section class="card">
           <span class="section-number">02 / ANSLUTNING</span>
           <h2>Din värmepump</h2>
-          <p>Använder myUplink via Home Assistant. Du behöver inte lämna ut ditt myUplink-lösenord.</p>
+          <p class="help">Använder myUplink via Home Assistant. Du behöver inte lämna ut ditt myUplink-lösenord.</p>
           <p id="discovery-message" role="status">Letar efter din NIBE-pump…</p>
           <p id="pump-connection" class="explanation"></p>
           <details id="manual-pump">
             <summary>Ändra pumpanslutning manuellt</summary>
             <label for="offset_entity">Entitet för kurvförskjutning</label>
             <select id="offset_entity" name="offset_entity"></select>
-            <p class="hint warning">Välj bara värmekurvans förskjutning, inte grundkurva eller annan pumpinställning. Vid automatisk upptäckt används NIBEs klimatsystem 1.</p>
+            <p class="hint warning help">Välj bara värmekurvans förskjutning, inte grundkurva eller annan pumpinställning. Vid automatisk upptäckt används NIBEs klimatsystem 1.</p>
           </details>
           <p id="offset-details" class="hint"></p>
           <label for="energy_entity">Pumpens elmätare eller totala eleffekt · valfritt</label>
           <select id="energy_entity" name="energy_entity"></select>
-          <p class="hint">Automatiskt använder en entydig räknare för använd el på samma myUplink-enhet som din pumpanslutning, annars NIBEs totala eleffekt (EL Current power consumption). El och kostnad uppskattas då från W/kW-historiken. Årsstatistik och timräknare används inte. Flera möjliga räknare summeras inte: välj då manuellt. Sparade manuella val behålls. Välj just pumpens använda el eller totala eleffekt, inte husets elmätare, en delkomponent eller producerad värme. Ackumulerade räknare ska ha Wh/kWh/MWh och state_class total eller total_increasing. Värme och varmvatten ingår tillsammans bara om givaren omfattar båda. Valet påverkar inte styrningen.</p>
+          <p class="hint help">Automatiskt använder en entydig räknare för använd el på samma myUplink-enhet som din pumpanslutning, annars NIBEs totala eleffekt (EL Current power consumption). El och kostnad uppskattas då från W/kW-historiken. Årsstatistik och timräknare används inte. Flera möjliga räknare summeras inte: välj då manuellt. Sparade manuella val behålls. Välj just pumpens använda el eller totala eleffekt, inte husets elmätare, en delkomponent eller producerad värme. Ackumulerade räknare ska ha Wh/kWh/MWh och state_class total eller total_increasing. Värme och varmvatten ingår tillsammans bara om givaren omfattar båda. Valet påverkar inte styrningen.</p>
           <div class="metrics">
             <div><span>Nuvarande förskjutning</span><strong id="current-offset">—</strong></div>
             <div><span>Beräknat mål</span><strong id="desired-offset">—</strong></div>
@@ -349,7 +350,7 @@
         <section class="card">
           <span class="section-number">03 / VÄDER</span>
           <h2>Ta hänsyn till kylan</h2>
-          <p>Valfri extra kompensation från aktuell utetemperatur. Pumpens grundkurva kompenserar redan för väder, så börja med påverkan 0.</p>
+          <p class="help">Valfri extra kompensation från aktuell utetemperatur. Pumpens grundkurva kompenserar redan för väder, så börja med påverkan 0.</p>
           <p id="outdoor-connection" class="explanation"></p>
           <details id="manual-outdoor">
             <summary>Ändra utegivare manuellt</summary>
@@ -360,7 +361,7 @@
             <div><label for="weather_gain">Påverkan · steg/°C</label><input id="weather_gain" name="weather_gain" type="number" min="0" max="0.5" step="0.01" required></div>
             <div><label for="weather_reference">Referenstemperatur · °C</label><input id="weather_reference" name="weather_reference" type="number" min="-30" max="30" step="0.1" required></div>
           </div>
-          <p class="hint">Kallare än referensen höjer förskjutningen; varmare sänker den. Använder aktuellt väder, inte prognos.</p>
+          <p class="hint help">Kallare än referensen höjer förskjutningen; varmare sänker den. Använder aktuellt väder, inte prognos.</p>
           <h3>Väderprognos</h3>
           <label for="forecast_entity">Prognoskälla</label>
           <select id="forecast_entity" name="forecast_entity"></select>
@@ -379,10 +380,10 @@
             <option value="nordpool">Nord Pool · exempelvis tillsammans med Enegic</option>
           </select>
           <p id="price-provider-status" class="hint" role="status"></p>
-          <p class="hint">Bara din sparade elpriskälla används. Tillägget byter aldrig automatiskt till en annan leverantör. Vid byte behöver du kontrollera givare och prisgränser och sedan spara.</p>
-          <p>Vill du värma lite extra före en dyrperiod och låta huset svalna försiktigt när elen blir dyr? Använd <strong>förvärmning med kommande priser</strong>, inte bara priset just nu.</p>
+          <p class="hint help">Bara din sparade elpriskälla används. Tillägget byter aldrig automatiskt till en annan leverantör. Vid byte behöver du kontrollera givare och prisgränser och sedan spara.</p>
+          <p class="help">Vill du värma lite extra före en dyrperiod och låta huset svalna försiktigt när elen blir dyr? Använd <strong>förvärmning med kommande priser</strong>, inte bara priset just nu.</p>
           <p><a href="#preheat-settings">Ställ in förvärmning och se temperaturmålen ↑</a></p>
-          <p class="hint">Förvärmningen använder kommande priser från din sparade elpriskälla och behöver inga fasta låg- eller högprisgränser. Den är av tills du aktiverar och sparar den. Huvudautomatiken måste också vara på för att styra pumpen.</p>
+          <p class="hint help">Förvärmningen använder kommande priser från din sparade elpriskälla och behöver inga fasta låg- eller högprisgränser. Den är av tills du aktiverar och sparar den. Huvudautomatiken måste också vara på för att styra pumpen.</p>
           <h3>Givare för priset just nu</h3>
           <p id="price-discovery" role="status"></p>
           <details id="manual-price">
@@ -392,39 +393,39 @@
           </details>
           <p id="price-unit" class="hint"></p>
           <p id="entities-status" class="hint" role="status"></p>
-          <details id="nordpool-help" class="disclosure" hidden><summary>Enegic och Nord Pool</summary>
+          <details id="nordpool-help" class="disclosure help" hidden><summary>Enegic och Nord Pool</summary>
             <p>Har du Enegic för husets förbrukning? Välj din aktuella Nord Pool-prisgivare, exempelvis <code>sensor.nord_pool_se3_aktuellt_pris</code>. Enegic mäter förbrukning; Nord Pool levererar priset.</p>
             <p>Förvärmning stöder Nord Pools <code>raw_today</code>/<code>raw_tomorrow</code> eller Home Assistants officiella Nord Pool-integration för SE1–SE4. För den officiella integrationen behöver givarens entitets-id innehålla elområdet. Utan kommande priser fungerar fortfarande den separata regeln för priset just nu. Prisgränser följer givarens enhet; moms och avgifter läggs inte till.</p>
           </details>
           <details id="fixed-price-settings" class="disclosure">
           <summary>Avancerat · extra kurvpåverkan från priset just nu</summary>
-          <p>Detta är en separat regel utan framförhållning: höj vid lågt pris och sänk vid högt. Den kan läggas ovanpå förvärmningen. Sätt båda stegvärdena till 0 om du bara vill använda förvärmningen; det stänger inte av förvärmningen.</p>
+          <p class="help">Detta är en separat regel utan framförhållning: höj vid lågt pris och sänk vid högt. Den kan läggas ovanpå förvärmningen. Sätt båda stegvärdena till 0 om du bara vill använda förvärmningen; det stänger inte av förvärmningen.</p>
           <div class="field-pair">
             <div><label for="price_low">Billigt vid eller under</label><input id="price_low" name="price_low" type="number" min="-10000" max="10000" step="any" required></div>
             <div><label for="price_high">Dyrt vid eller över</label><input id="price_high" name="price_high" type="number" min="-10000" max="10000" step="any" required></div>
             <div><label for="cheap_boost">Höjning vid lågt pris · steg</label><input id="cheap_boost" name="cheap_boost" type="number" min="0" max="3" step="0.1" required></div>
             <div><label for="expensive_reduction">Sänkning vid högt pris · steg</label><input id="expensive_reduction" name="expensive_reduction" type="number" min="0" max="3" step="0.1" required></div>
           </div>
-          <p class="hint">Prisgränser anges i givarens enhet, utan omräkning. Steg är kurvförskjutning, inte grader inne. Regeln får inte förstärka en temperaturavvikelse utanför toleransen mot det mål som gäller just då, inklusive eventuell förvärmning.</p>
+          <p class="hint help">Prisgränser anges i givarens enhet, utan omräkning. Steg är kurvförskjutning, inte grader inne. Regeln får inte förstärka en temperaturavvikelse utanför toleransen mot det mål som gäller just då, inklusive eventuell förvärmning.</p>
           </details>
         </section>
       </div>
 
       <section class="card" id="offset-limits">
         <h2>Tillåten kurvförskjutning</h2>
-        <p>Du bestämmer hur långt automatiken får höja och sänka värmen. Gränserna är justerbara, inte ett fast tak på 4.</p>
+        <p class="help">Du bestämmer hur långt automatiken får höja och sänka värmen. Gränserna är justerbara, inte ett fast tak på 4.</p>
         <p id="offset-limits-saved" class="hint" role="status"></p>
         <div class="field-pair">
           <div><label for="min_offset">Lägsta tillåtna förskjutning · steg</label><input id="min_offset" name="min_offset" type="number" min="-10" max="10" step="0.1" required></div>
           <div><label for="max_offset">Högsta tillåtna förskjutning · steg</label><input id="max_offset" name="max_offset" type="number" min="-10" max="10" step="0.1" required></div>
         </div>
-        <p class="hint">En högre gräns kan ge mer värme i hela huset, även i redan varma rum. Ett kurvsteg är inte en grads rumstemperatur. Pumpens tillåtna intervall, maximal ändring per gång och väntetiden gäller fortfarande. Ändringar används först när du sparar.</p>
+        <p class="hint help">En högre gräns kan ge mer värme i hela huset, även i redan varma rum. Ett kurvsteg är inte en grads rumstemperatur. Pumpens tillåtna intervall, maximal ändring per gång och väntetiden gäller fortfarande. Ändringar används först när du sparar.</p>
         <button type="submit">Spara inställningar</button>
       </section>
       <section class="card advanced">
         <details>
           <summary>Säkerhet och finjustering</summary>
-          <p>En förskjutningsenhet är inte samma sak som en grads rumstemperatur. Golvvärme och radiatorer reagerar långsamt. Ändra lite och följ resultatet över tid.</p>
+          <p class="help">En förskjutningsenhet är inte samma sak som en grads rumstemperatur. Golvvärme och radiatorer reagerar långsamt. Ändra lite och följ resultatet över tid.</p>
           <div class="advanced-grid" id="advanced-fields"></div>
         </details>
       </section>
@@ -438,7 +439,7 @@
       <summary><span class="section-number">KONTROLL</span><strong>Testa styrningen</strong><small>Se med egna ögon att pumpen tar emot ändringar.</small></summary>
     <section class="card dashboard" id="test-card">
       <h2>Lyssnar pumpen?</h2>
-      <p>Testet ändrar värmekurvans förskjutning <strong>ett steg i 10 minuter</strong> och ställer sedan automatiskt tillbaka den. Automatiken väntar under tiden. Så kort tid märks inte inomhus.</p>
+      <p class="help">Testet ändrar värmekurvans förskjutning <strong>ett steg i 10 minuter</strong> och ställer sedan automatiskt tillbaka den. Automatiken väntar under tiden. Så kort tid märks inte inomhus.</p>
       <div id="test-check" class="test-check" hidden>
         <p id="test-look" class="test-look"></p>
         <div class="test-values">
@@ -451,7 +452,7 @@
       <ol id="test-steps" class="test-steps"></ol>
       <p id="test-status" role="status">Inget test har körts ännu.</p>
       <div class="buttons"><button type="button" id="test-start">Starta test</button><button type="button" id="test-stop" class="secondary" hidden>Avbryt och återställ nu</button></div>
-      <details class="test-where">
+      <details class="test-where help">
         <summary>Var hittar jag värdet på pumpen?</summary>
         <ul class="test-howto">
           <li><strong>myUplink-appen (enklast):</strong> öppna pumpen och leta upp <b>Förskjutning värmekurva</b> för klimatsystem 1.</li>
@@ -466,14 +467,80 @@
       <summary><span class="section-number">SPÅRBAR STYRNING</span><strong>Ändringslogg</strong><small>Allt automatiken och du har ändrat.</small></summary>
     <section class="card dashboard">
       <div class="section-heading"><div><span class="section-number">SPÅRBAR STYRNING</span><h2>Ändringslogg</h2></div><button type="button" id="refresh-events" class="secondary">Uppdatera logg</button></div>
-      <p>Se inställningsändringar, automatiska styrförsök, fel och återlästa värden. Ett accepterat serviceanrop är inte samma sak som en bekräftad ändring på pumpen.</p>
+      <p class="help">Se inställningsändringar, automatiska styrförsök, fel och återlästa värden. Ett accepterat serviceanrop är inte samma sak som en bekräftad ändring på pumpen.</p>
       <p id="events-status" role="status">Hämtar ändringslogg…</p>
       <div id="events-list" class="events-list"></div>
       <button type="button" id="older-events" class="secondary" hidden>Visa äldre händelser</button>
-      <p class="hint">Loggen sparas lokalt och överlever omstart. Händelser före denna uppdatering kan inte återskapas. Manuella ändringar på pumpen kan upptäckas vid nästa avläsning men deras upphov kan inte fastställas.</p>
+      <p class="hint help">Loggen sparas lokalt och överlever omstart. Händelser före denna uppdatering kan inte återskapas. Manuella ändringar på pumpen kan upptäckas vid nästa avläsning men deras upphov kan inte fastställas.</p>
     </section>
     </details>
     <footer>Via Home Assistant · Avläsning varje minut · Pumpens egna skydd och reglering är alltid kvar.<span id="version"></span></footer>
   </main>
+  <main id="page-help" hidden aria-label="Hjälp"></main>
+<script>
+// Översikten visar grafer och inställningar. Alla förklarande texter (klassen "help") samlas
+// på sidan Hjälp, grupperade efter rubriken de hör till. Hjälpsidan byggs av kopior, så inga
+// element som app.js använder flyttas eller ändras.
+(() => {
+  const main = document.getElementById("page-main");
+  const helpPage = document.getElementById("page-help");
+  const tabMain = document.getElementById("tab-main");
+  const tabHelp = document.getElementById("tab-help");
+  if (!main || !helpPage) return;
+  let built = false;
+  const titleOf = (el) => {
+    const section = el.closest("section.card, section.hero, details.fold");
+    if (!section) return "Övrigt";
+    if (section.dataset.helpTitle) return section.dataset.helpTitle;
+    const heading = section.matches("details.fold")
+      ? section.querySelector(":scope > summary strong") : section.querySelector("h2, summary");
+    return heading ? heading.textContent.trim() : "Övrigt";
+  };
+  const build = () => {
+    const intro = document.createElement("section");
+    intro.className = "card";
+    intro.innerHTML = "<span class=\"section-number\">FÖRKLARINGAR</span><h2>Hjälp</h2>"
+      + "<p>Här samlas texterna som förklarar sidorna. Graferna och inställningarna finns på Översikt.</p>";
+    helpPage.append(intro);
+    const groups = new Map();
+    for (const el of main.querySelectorAll(".help")) {
+      if (el.parentElement?.closest(".help")) continue;
+      const title = titleOf(el);
+      if (!groups.has(title)) groups.set(title, []);
+      groups.get(title).push(el);
+    }
+    for (const [title, items] of groups) {
+      const card = document.createElement("section");
+      card.className = "card help-group";
+      const heading = document.createElement("h2");
+      heading.textContent = title;
+      card.append(heading);
+      for (const item of items) {
+        const copy = item.cloneNode(true);
+        copy.removeAttribute("id");
+        copy.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
+        copy.hidden = false;
+        if (copy.tagName === "DETAILS") copy.open = true;
+        card.append(copy);
+      }
+      helpPage.append(card);
+    }
+    built = true;
+  };
+  const show = () => {
+    const help = location.hash === "#hjalp";
+    if (help && !built) build();
+    document.body.classList.toggle("page-help", help);
+    main.hidden = help;
+    helpPage.hidden = !help;
+    tabMain.toggleAttribute("aria-current", !help);
+    tabHelp.toggleAttribute("aria-current", help);
+    if (!help) return;
+    window.scrollTo(0, 0);
+  };
+  window.addEventListener("hashchange", show);
+  show();
+})();
+</script>
 </body>
 </html>
