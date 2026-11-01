@@ -159,7 +159,7 @@ def handler_for(controller, api_token=None, insights=None):
                     self.respond(200, entities)
                 elif path == "/api/areas":
                     self.respond(200, controller.ha.entity_areas(controller.settings()["room_sensors"]))
-                elif api_token is None and path in ("/", "/index.html", "/app.js", "/theme.js", "/style.css"):
+                elif api_token is None and path in ("/", "/index.html", "/app.js", "/pages.js", "/theme.js", "/style.css"):
                     name = "index.html" if path == "/" else path[1:]
                     mime = {"html": "text/html", "js": "text/javascript", "css": "text/css"}[name.rsplit(".", 1)[1]]
                     self.respond(200, (STATIC / name).read_bytes(), mime + "; charset=utf-8")

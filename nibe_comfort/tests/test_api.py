@@ -123,6 +123,11 @@ class ApiTests(unittest.TestCase):
                 html = response.read()
             self.assertIn(b'src="./theme.js"', html)
             self.assertLess(html.index(b"theme.js"), html.index(b"<body>"))
+            with urlopen(base + "/pages.js", timeout=3) as response:
+                self.assertIn("text/javascript", response.headers["Content-Type"])
+                self.assertIn(b"page-help", response.read())
+            self.assertIn(b'src="./pages.js"', html)
+            self.assertNotIn(b"<script>", html, "Inline scripts are blocked by the Content-Security-Policy")
         finally:
             server.shutdown()
             server.server_close()
