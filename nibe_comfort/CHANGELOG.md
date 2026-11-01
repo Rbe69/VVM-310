@@ -1,5 +1,33 @@
 # Ändringslogg
 
+## 0.2.36-egen4
+
+- Sidväxlaren för Hjälp ligger nu i en egen fil (`pages.js`). Tilläggets
+  säkerhetsrubrik blockerar inbyggda skript, så fliken Hjälp i egen3 hände
+  ingenting. Ny fil serveras av tillägget och finns med i testet.
+
+## 0.2.36-egen3
+
+- Nytt gränssnitt med två flikar: **Översikt** (grafer och huvudinställningar)
+  och **Hjälp** (alla förklarande texter, grupperade efter rubrik). Inga element
+  som tilläggets kod använder har flyttats. Teckenförklaringar vid graferna
+  ligger kvar på Översikt.
+
+## 0.2.36-egen2
+
+- **När går elpatronen?** visar nu täckning när elpatronssensorn står still på
+  0 kW. Home Assistant sparar ingen ny historikrad medan värdet är oförändrat,
+  och tidigare blev det en lucka som gav "Okänt". Ett giltigt värde hålls nu
+  fram till nästa registrerade rad och aldrig förbi en rad där givaren blev
+  otillgänglig. Efter sista raden hålls värdet bara om givaren är aktuell och
+  oförändrad. Bara glapp över 15 minuter berörs.
+- Luckor när givaren faktiskt var otillgänglig räknas fortfarande inte.
+
+## 0.2.36-egen1
+
+- Egen version av NIBE Comfort (fork av jesper1982atea/NIBE-F730) med eget
+  namn, eget förråd och egen version.
+
 ## 0.2.36
 
 - Ny vy **När går elpatronen?** visar elpatronens egen effekt, observerade
